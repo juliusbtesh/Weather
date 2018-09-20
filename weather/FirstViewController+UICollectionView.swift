@@ -6,13 +6,13 @@
 //
 
 import UIKit
-import Cards
 
 extension FirstViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     // MARK: - Configuration
     
     internal func configure(collectionView: UICollectionView) {
+        
         collectionView.registerReusableCell(CardViewCell.self)
 //        collectionView.registerReusableCell(CardHighlight.self)
 //        collectionView.registerReusableCell(CardArticle.self)
@@ -20,8 +20,9 @@ extension FirstViewController: UICollectionViewDataSource, UICollectionViewDeleg
 //        collectionView.registerReusableCell(CardPlayer.self)
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.backgroundColor = UIColor.white
-        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 20, right: 0)
+        collectionView.backgroundColor = UIColor.clear
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 20, right: 20)
+        collectionView.showsVerticalScrollIndicator = false
     }
     
     // MARK: - UICollectionViewDataSource
@@ -31,14 +32,16 @@ extension FirstViewController: UICollectionViewDataSource, UICollectionViewDeleg
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return allWeatherData.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cardViewCell = CardViewCell.dequeue(fromCollectionView: collectionView, atIndexPath: indexPath)
         
-        let cardContentVC = storyboard!.instantiateViewController(withIdentifier: "CardContent")
-        cardViewCell.card?.shouldPresent(cardContentVC, from: self, fullscreen: false)
+//        let cardContentVC = storyboard!.instantiateViewController(withIdentifier: "CardContent")
+//        cardViewCell.card?.shouldPresent(cardContentVC, from: self, fullscreen: false)
+        
+        cardViewCell.setWeather(data: allWeatherData.object(at: indexPath.row) as! Weather)
 
         return cardViewCell
         
@@ -67,10 +70,10 @@ extension FirstViewController: UICollectionViewDataSource, UICollectionViewDeleg
 //            let rowNumber = indexPath.item/numberOfItemsInRow
 
             // Compressed With
-            let compressedWidth = collectionView.bounds.width/3
+//            let compressedWidth = collectionView.bounds.width/3
 
             // Expanded Width
-            let expandedWidth = (collectionView.bounds.width/3) * 2
+//            let expandedWidth = (collectionView.bounds.width/3) * 2
 //
 //            // Is Even Row
 //            let isEvenRow = rowNumber % 2 == 0
@@ -86,7 +89,7 @@ extension FirstViewController: UICollectionViewDataSource, UICollectionViewDeleg
 //                width = isFirstItem ? expandedWidth : compressedWidth
 //            }
 
-            return CGSize(width: compressedWidth, height: collectionView.bounds.height * 0.6)
+            return CGSize(width: collectionView.bounds.width-40, height: view.bounds.height * 0.10)
 //        }
     }
     

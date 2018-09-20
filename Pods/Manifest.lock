@@ -1,0 +1,20 @@
+PODS:
+  - SnapKit (4.0.1)
+  - WXKDarkSky (2.2.0)
+
+DEPENDENCIES:
+  - SnapKit (~> 4.0.0)
+  - WXKDarkSky (~> 2.2.0)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - SnapKit
+    - WXKDarkSky
+
+SPEC CHECKSUMS:
+  SnapKit: 0de968a9fec17499afa29683b05d0c775b6d1c29
+  WXKDarkSky: d532c1fc3b3071fd7136c1ae3c78dc23e50a78f9
+
+PODFILE CHECKSUM: 662e2e292b6509217094c64b231d2612072d5f49
+
+COCOAPODS: 1.5.3

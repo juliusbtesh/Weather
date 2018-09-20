@@ -9,116 +9,160 @@ import UIKit
 import WXKDarkSky
 import CoreLocation
 import CoreData
-import Cards
+import SnapKit
 
 class FirstViewController: UIViewController {
     
-    //@IBOutlet weak
+    var currentCityLabel: UILabel!
+    var currentSummaryLabel: UILabel!
+    var currentTemperatureLabel: UILabel!
+    
     var collectionView: UICollectionView!
     
+    let allWeatherData = NSMutableArray()
+    var currentWeatherData: Weather?
+    
     let locationManager = CLLocationManager()
+    let myActivityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = UIColor(patternImage: UIImage(named: "gradient-background")!)
+        
+        setupActivityIndicator()
+        setupCurrentViews()
+        
         setupCollectionView()
         configure(collectionView: collectionView)
         
-//        let card = CardPlayer(frame: CGRect(x: 40, y: 50, width: 300 , height: 360))
-//        card.textColor = UIColor.black
-//        card.videoSource = URL(string: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
-//        card.shouldDisplayPlayer(from: self)    //Required.
-//
-//        card.playerCover = UIImage(named: "gradient-background")!  // Shows while the player is loading
-//        card.playImage = UIImage(named: "app-icon")!  // Play button icon
-//
-//        card.isAutoplayEnabled = true
-//        card.shouldRestartVideoWhenPlaybackEnds = true
-//
-//        card.title = "Big Buck Bunny"
-//        card.subtitle = "Inside the extraordinary world of Buck Bunny"
-//        card.category = "today's movie"
-
-//        view.addSubview(card)
+        myActivityIndicator.startAnimating()
         
-//        let icons: [UIImage] = [
-//
-//            UIImage(named: "gradient-background")!,
-//            UIImage(named: "monument-valley")!,
-//            UIImage(named: "gradient-background")!,
-//            UIImage(named: "monument-valley")!,
-//            UIImage(named: "gradient-background")!,
-//            UIImage(named: "monument-valley")!
-//
-//        ]   // Data source for CardGroupSliding
-//
-//        let card = CardGroupSliding(frame: CGRect(x: 40, y: 50, width: 300 , height: 360))
-//        card.textColor = UIColor.black
-//
-//        card.icons = icons
-//        card.iconsSize = 60
-//        card.iconsRadius = 30
-//
-//        card.title = "from the editors"
-//        card.subtitle = "Welcome to XI Cards !"
-//
-//        view.addSubview(card)
+//        deleteAllWeatherObjects()
         
-//        let card = CardHighlight(frame: CGRect(x: 10, y: 30, width: 200 , height: 240))
-//
-//        card.backgroundColor = UIColor(red: 0, green: 94/255, blue: 112/255, alpha: 1)
-//        card.icon = UIImage(named: "app-icon")
-//        card.title = "Welcome \nto \nCards !"
-//        card.itemTitle = "Flappy Bird"
-//        card.itemSubtitle = "Flap That !"
-//        card.textColor = UIColor.white
-//
-//        card.hasParallax = true
-        
-//        let cardContentVC = storyboard!.instantiateViewController(withIdentifier: "CardContent")
-//        card.shouldPresent(cardContentVC, from: self, fullscreen: false)
-//        
-//        view.addSubview(card)
-        
-        deleteAllWeatherObjects()
+        loadWeather()
         
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         
-        locationManager.requestLocation()
+//        locationManager.requestLocation()
+    }
+    
+    func setupActivityIndicator() {
+        // Position Activity Indicator in the center of the main view
+        myActivityIndicator.center = view.center
+        
+        // If needed, you can prevent Acivity Indicator from hiding when stopAnimating() is called
+        myActivityIndicator.hidesWhenStopped = true
+        
+        view.addSubview(myActivityIndicator)
+    }
+    
+    func reloadPage() {
+        myActivityIndicator.stopAnimating()
+        
+        setCurrentViewValues {
+            self.collectionView.perform(#selector(UICollectionView.reloadData), with: nil, afterDelay: 0.75)
+        }
+    }
+    
+    func setupCurrentViews() {
+        currentCityLabel = UILabel(frame: CGRect.zero)
+        currentCityLabel.font = UIFont.systemFont(ofSize: 32, weight: .regular)
+        currentCityLabel.textColor = UIColor.white
+        
+        view.addSubview(currentCityLabel)
+        
+        currentSummaryLabel = UILabel(frame: CGRect.zero)
+        currentSummaryLabel.font = UIFont.systemFont(ofSize: 18, weight: .light)
+        currentSummaryLabel.textColor = UIColor.white
+        
+        view.addSubview(currentSummaryLabel)
+        
+        currentTemperatureLabel = UILabel(frame: CGRect.zero)
+        currentTemperatureLabel.font = UIFont.systemFont(ofSize: 100, weight: .thin)
+        currentTemperatureLabel.textColor = UIColor.white
+        
+        view.addSubview(currentTemperatureLabel)
+        
+        currentCityLabel.snp.makeConstraints { (make) in
+            make.centerX.equalTo(view)
+            make.top.equalTo(view).offset(64)
+        }
+        
+        currentSummaryLabel.snp.makeConstraints { (make) in
+            make.centerX.equalTo(currentCityLabel)
+            make.top.equalTo(currentCityLabel.snp_bottomMargin).offset(10)
+        }
+        
+        currentTemperatureLabel.snp.makeConstraints { (make) in
+            make.centerX.equalTo(currentCityLabel)
+            make.top.equalTo(currentSummaryLabel.snp_bottomMargin).offset(20)
+        }
     }
     
     func setupCollectionView() {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
+        //layout.sectionInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
 //        layout.itemSize = CGSize(width: 60, height: 60)
-        layout.scrollDirection = .horizontal
+        //layout.scrollDirection = .horizontal
         
-        collectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
+        collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         self.view.addSubview(collectionView)
+        
+        collectionView.snp.makeConstraints { (make) in
+            make.top.equalTo(currentTemperatureLabel.snp_bottomMargin).offset(20)
+            make.left.right.bottom.equalTo(view.safeAreaInsets)
+        }
     }
     
-    func lookUpCurrentLocation(completionHandler: @escaping (CLPlacemark?) -> Void ) {
-        // Use the last reported location.
-        if let lastLocation = self.locationManager.location {
-            let geocoder = CLGeocoder()
-            
-            // Look up the location and pass it to the completion handler
-            geocoder.reverseGeocodeLocation(lastLocation, completionHandler: { (placemarks, error) in
-                if error == nil {
-                    let firstLocation = placemarks?[0]
-                    completionHandler(firstLocation)
-                }
-                else {
-                    // An error occurred during geocoding.
-                    completionHandler(nil)
-                }
-            })
+    func setCurrentViewValues(completionHandler: @escaping () -> Void) {
+        if let data = currentWeatherData {
+            let location = CLLocation(latitude: data.latitude, longitude: data.longitude)
+            lookUpCurrentLocation(location: location) { (place) in
+                self.currentCityLabel.text = place?.locality
+                self.currentSummaryLabel.text = data.summary
+                self.currentTemperatureLabel.text = String(describing: data.temperature) + "°"
+                
+                completionHandler()
+            }
         }
-        else {
-            // No location was available.
-            completionHandler(nil)
-        }
+    }
+    
+    func lookUpCurrentLocation(location: CLLocation, completionHandler: @escaping (CLPlacemark?) -> Void ) {
+        let geocoder = CLGeocoder()
+        
+        // Look up the location and pass it to the completion handler
+        geocoder.reverseGeocodeLocation(location, completionHandler: { (placemarks, error) in
+            if error == nil {
+                let firstLocation = placemarks?[0]
+                completionHandler(firstLocation)
+            }
+            else {
+                // An error occurred during geocoding.
+                completionHandler(nil)
+            }
+        })
+//        if let lastLocation = self.locationManager.location {
+//            // Use the last reported location.
+//            let geocoder = CLGeocoder()
+//
+//            // Look up the location and pass it to the completion handler
+//            geocoder.reverseGeocodeLocation(location, completionHandler: { (placemarks, error) in
+//                if error == nil {
+//                    let firstLocation = placemarks?[0]
+//                    completionHandler(firstLocation)
+//                }
+//                else {
+//                    // An error occurred during geocoding.
+//                    completionHandler(nil)
+//                }
+//            })
+//        }
+//        else {
+//            // No location was available.
+//            completionHandler(nil)
+//        }
     }
     
     func deleteAllWeatherObjects() {
@@ -131,7 +175,7 @@ class FirstViewController: UIViewController {
         request.returnsObjectsAsFaults = false
         do {
             let result = try context.fetch(request)
-            print (result.count)
+//            print (result.count)
             for data in result as! [NSManagedObject] {
                 context.delete(data)
                 try context.save()
@@ -155,17 +199,31 @@ class FirstViewController: UIViewController {
         let context = appDelegate.persistentContainer.viewContext
         
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Weather")
+        let sort = NSSortDescriptor(key: #keyPath(Weather.time), ascending: true)
+        request.sortDescriptors = [sort]
         //request.predicate = NSPredicate(format: "age = %@", "12")
         request.returnsObjectsAsFaults = false
         do {
             let result = try context.fetch(request)
             print (result.count)
             for data in result as! [NSManagedObject] {
-                print(data.value(forKey: "temperature") as! Double)
+                let weather = data as! Weather
+                if Calendar.current.isDateInToday(weather.time!) {
+                    currentWeatherData = weather
+                } else {
+                    allWeatherData.add(weather)
+                }
+                //print(data.value(forKey: "temperature") as! Double)
             }
             
+            if Thread.current.isMainThread {
+                reloadPage()
+            } else {
+                DispatchQueue.main.sync {
+                    reloadPage()
+                }
+            }
         } catch {
-            
             print("Failed")
         }
     }
@@ -183,25 +241,62 @@ class FirstViewController: UIViewController {
         let context = appDelegate.persistentContainer.viewContext
         
         let entity = NSEntityDescription.entity(forEntityName: "Weather", in: context)
-        let newWeather = NSManagedObject(entity: entity!, insertInto: context)
         
-        if let currently = response.currently {
-            if let temperature = currently.temperature {
-                print("Current temperature: " + String(describing: temperature))
-                newWeather.setValue(temperature, forKey: "temperature")
-            }
-            let time = currently.time
-            print("Current time: " + String(describing: DateFormatter.localizedString(from: time, dateStyle: DateFormatter.Style.full, timeStyle: DateFormatter.Style.full)))
-            
-            newWeather.setValue(time, forKey: "date")
-            
-            do {
-                try context.save()
-                print("Saved")
-            } catch {
-                print("Failed saving")
+        if let daily = response.daily {
+            let data = daily.data
+            for d in data  {
+                let newWeather = NSManagedObject(entity: entity!, insertInto: context)
+                //print("This is weather data for ", d.time, " = ", d)
+                //                if let temperature = d.temperature {
+                //                    print("temperature: " + String(describing: temperature))
+                //                }
+                //                print(d.icon)
+                setupWeather(object: newWeather, dataBlock: d, latitude: response.latitude, longitude: response.longitude)
+                
+                if Calendar.current.isDateInToday(d.time) {
+                    if let currently = response.currently {
+                        newWeather.setValue(currently.temperature, forKey: "temperature")
+                        newWeather.setValue(currently.summary, forKey: "summary")
+                        currentWeatherData = newWeather as? Weather
+                    }
+                }
             }
         }
+        
+        do {
+            try context.save()
+            print("Saved")
+        } catch {
+            print("Failed saving")
+        }
+        
+//        print(response.daily?.data)
+        
+        
+//        if let currently = response.currently {
+//            if let temperature = currently.temperature {
+//                print("Current temperature: " + String(describing: temperature))
+//                newWeather.setValue(temperature, forKey: "temperature")
+//            }
+//            let time = currently.time
+//            print("Current time: " + String(describing: DateFormatter.localizedString(from: time, dateStyle: DateFormatter.Style.full, timeStyle: DateFormatter.Style.full)))
+//
+//
+//
+//            newWeather.setValue(time, forKey: "date")
+//
+//            do {
+//                try context.save()
+//                print("Saved")
+//
+//                allWeatherData.add(newWeather)
+//                DispatchQueue.main.sync {
+//                    collectionView.reloadData()
+//                }
+//            } catch {
+//                print("Failed saving")
+//            }
+//        }
     }
     
     func getWeather() {
@@ -211,7 +306,7 @@ class FirstViewController: UIViewController {
             
             let options = WXKDarkSkyRequest.Options(exclude: [.minutely, .alerts], extendHourly: true, language: .english, units: .auto)
             
-            request.loadData(point: point, time: Date.init(), options: options) { (response, error) in
+            request.loadData(point: point, time: nil, options: options) { (response, error) in
                 if let response = response {
                     // Successful request. Sample to get the current temperature...
                     self.saveWeather(response: response)
@@ -234,6 +329,54 @@ class FirstViewController: UIViewController {
         else {
             print("No location was available")
         }
+    }
+    
+//    func getWeatherForDay(date: Date?, completionHandler: @escaping (Bool) -> Void) {
+//        if let lastLocation = self.locationManager.location {
+//            let request = WXKDarkSkyRequest(key: "56caa52a89fd9f85d47aa90beed6d80b")
+//            let point = WXKDarkSkyRequest.Point(latitude: lastLocation.coordinate.latitude, longitude: lastLocation.coordinate.longitude)
+//
+//            let options = WXKDarkSkyRequest.Options(exclude: [.minutely, .alerts], extendHourly: true, language: .english, units: .auto)
+//
+//            request.loadData(point: point, time: date, options: options) { (response, error) in
+//                if let response = response {
+//                    // Successful request. Sample to get the current temperature...
+//                    self.saveWeather(response: response)
+//                    self.loadWeather()
+//                } else if let error = error {
+//                    // Encountered an error, handle it here...
+//                    print(error)
+//                }
+//            }
+//        }
+//        else {
+//            print("No location was available")
+//        }
+//    }
+    
+    func setupWeather(object: NSManagedObject, dataBlock: WXKDarkSkyDataPoint, latitude: Double, longitude: Double) {
+        object.setValue(latitude, forKey: "latitude")
+        object.setValue(longitude, forKey: "longitude")
+        
+        object.setValue(dataBlock.time, forKey: "time")
+//        object.setValue(dataBlock.temperature, forKey: "temperature")
+        object.setValue(dataBlock.summary, forKey: "summary")
+        object.setValue(dataBlock.icon, forKey: "icon")
+        object.setValue(dataBlock.sunriseTime, forKey: "sunriseTime")
+        object.setValue(dataBlock.sunsetTime, forKey: "sunsetTime")
+        
+        object.setValue(dataBlock.temperatureHigh, forKey: "temperatureHigh")
+        object.setValue(dataBlock.temperatureLow, forKey: "temperatureLow")
+        object.setValue(dataBlock.temperatureHighTime, forKey: "temperatureHighTime")
+        object.setValue(dataBlock.temperatureLowTime, forKey: "temperatureLowTime")
+        
+        object.setValue(dataBlock.dewPoint, forKey: "dewPoint")
+        object.setValue(dataBlock.humidity, forKey: "humidity")
+        object.setValue(dataBlock.windSpeed, forKey: "windSpeed")
+        object.setValue(dataBlock.windGust, forKey: "windGust")
+        object.setValue(dataBlock.windGustTime, forKey: "windGustTime")
+        object.setValue(dataBlock.windBearing, forKey: "windBearing")
+        object.setValue(dataBlock.pressure, forKey: "pressure")
     }
 }
 
