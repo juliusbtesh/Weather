@@ -40,8 +40,9 @@ extension FirstViewController: UICollectionViewDataSource, UICollectionViewDeleg
         
 //        let cardContentVC = storyboard!.instantiateViewController(withIdentifier: "CardContent")
 //        cardViewCell.card?.shouldPresent(cardContentVC, from: self, fullscreen: false)
-        
-        cardViewCell.setWeather(data: allWeatherData.object(at: indexPath.row) as! Weather)
+        if allWeatherData.count > 0 {
+            cardViewCell.setWeather(data: allWeatherData.object(at: indexPath.row) as! Weather)
+        }
 
         return cardViewCell
         
@@ -56,41 +57,24 @@ extension FirstViewController: UICollectionViewDataSource, UICollectionViewDeleg
 //        }
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "weatherDetails", sender: allWeatherData.object(at: indexPath.row))
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "weatherDetails" ,
+            let nextScene = segue.destination as? WeatherDetailViewController {
+            let selectedWeatherData = sender as! Weather
+            nextScene.weatherData = selectedWeatherData
+//            nextScene.setupPage(data: selectedWeatherData)
+        }
+    }
+    
     // MARK: - UICollectionViewDelegateFlowLayout
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        if UIDevice.current.userInterfaceIdiom == .phone {
-//            return CGSize(width: collectionView.bounds.width, height: BaseRoundedCardCell.cellHeight)
-//        } else {
-
-            // Number of Items per Row
-//            let numberOfItemsInRow = 1
-
-            // Current Row Number
-//            let rowNumber = indexPath.item/numberOfItemsInRow
-
-            // Compressed With
-//            let compressedWidth = collectionView.bounds.width/3
-
-            // Expanded Width
-//            let expandedWidth = (collectionView.bounds.width/3) * 2
-//
-//            // Is Even Row
-//            let isEvenRow = rowNumber % 2 == 0
-//
-//            // Is First Item in Row
-//            let isFirstItem = indexPath.item % numberOfItemsInRow != 0
-//
-//            // Calculate Width
-//            var width: CGFloat = 0.0
-//            if isEvenRow {
-//                width = isFirstItem ? compressedWidth : expandedWidth
-//            } else {
-//                width = isFirstItem ? expandedWidth : compressedWidth
-//            }
-
             return CGSize(width: collectionView.bounds.width-40, height: view.bounds.height * 0.10)
-//        }
     }
     
 //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {

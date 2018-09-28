@@ -41,17 +41,6 @@ class CardViewCell: UICollectionViewCell {
         temperatureLowLabel.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.light)
         temperatureHighLabel.text = ""
         temperatureHighLabel.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.bold)
-        //icon.isHidden = true
-
-//        card = CardHighlight(frame: CGRect(x: 0, y: 0, width: 0 , height: 0))
-//
-//        card.backgroundColor = UIColor(red: 0, green: 94/255, blue: 112/255, alpha: 1)
-//        card.hasParallax = true
-//
-////                let cardContentVC = storyboard!.instantiateViewController(withIdentifier: "CardContent")
-////                card.shouldPresent(cardContentVC, from: self, fullscreen: false)
-//
-//        self.addSubview(card)
     }
     
     override func layoutSubviews() {
@@ -82,7 +71,7 @@ class CardViewCell: UICollectionViewCell {
         }
     }
     
-    func setWeather(data: Weather) {
+    func setWeather(data: Weather) {        
         weatherData = data
         
         icon.image = UIImage(named: weatherData.icon!)

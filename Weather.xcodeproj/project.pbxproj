@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		44A36E28215D41C1005239FE /* DetailLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A36E27215D41C1005239FE /* DetailLabelView.swift */; };
+		44A36E2A215D76E0005239FE /* WeatherDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A36E29215D76E0005239FE /* WeatherDetailViewController.swift */; };
 		44EB51AD215170A100B113F6 /* FirstViewController+UICollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EB51AC215170A100B113F6 /* FirstViewController+UICollectionView.swift */; };
 		44EB51B1215171E200B113F6 /* UICollectionView+Reusable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EB51AF215171E200B113F6 /* UICollectionView+Reusable.swift */; };
 		44EB51B2215171E200B113F6 /* Reusable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EB51B0215171E200B113F6 /* Reusable.swift */; };
@@ -14,7 +16,6 @@
 		44EB51B8215176F000B113F6 /* CardViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44EB51B7215176F000B113F6 /* CardViewCell.xib */; };
 		44ED03B321513DFD00ED5A11 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44ED03B221513DFD00ED5A11 /* AppDelegate.swift */; };
 		44ED03B521513DFD00ED5A11 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44ED03B421513DFD00ED5A11 /* FirstViewController.swift */; };
-		44ED03B721513DFD00ED5A11 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44ED03B621513DFD00ED5A11 /* SecondViewController.swift */; };
 		44ED03BA21513DFD00ED5A11 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44ED03B821513DFD00ED5A11 /* Main.storyboard */; };
 		44ED03BC21513DFE00ED5A11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44ED03BB21513DFE00ED5A11 /* Assets.xcassets */; };
 		44ED03BF21513DFE00ED5A11 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44ED03BD21513DFE00ED5A11 /* LaunchScreen.storyboard */; };
@@ -24,6 +25,8 @@
 
 /* Begin PBXFileReference section */
 		11DAD2417D006E3D3A1E3C38 /* Pods-weather.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-weather.release.xcconfig"; path = "Pods/Target Support Files/Pods-weather/Pods-weather.release.xcconfig"; sourceTree = "<group>"; };
+		44A36E27215D41C1005239FE /* DetailLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailLabelView.swift; sourceTree = "<group>"; };
+		44A36E29215D76E0005239FE /* WeatherDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDetailViewController.swift; sourceTree = "<group>"; };
 		44EB51AC215170A100B113F6 /* FirstViewController+UICollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FirstViewController+UICollectionView.swift"; sourceTree = "<group>"; };
 		44EB51AF215171E200B113F6 /* UICollectionView+Reusable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Reusable.swift"; sourceTree = "<group>"; };
 		44EB51B0215171E200B113F6 /* Reusable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reusable.swift; sourceTree = "<group>"; };
@@ -32,7 +35,6 @@
 		44ED03AF21513DFD00ED5A11 /* weather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = weather.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		44ED03B221513DFD00ED5A11 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		44ED03B421513DFD00ED5A11 /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
-		44ED03B621513DFD00ED5A11 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		44ED03B921513DFD00ED5A11 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		44ED03BB21513DFE00ED5A11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		44ED03BE21513DFE00ED5A11 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -54,6 +56,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		442434AB215DB5AE0011E98C /* WeatherDetail */ = {
+			isa = PBXGroup;
+			children = (
+				44A36E29215D76E0005239FE /* WeatherDetailViewController.swift */,
+				44A36E27215D41C1005239FE /* DetailLabelView.swift */,
+			);
+			path = WeatherDetail;
+			sourceTree = "<group>";
+		};
 		44EB51AE2151719100B113F6 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
@@ -88,8 +99,8 @@
 				44ED03B221513DFD00ED5A11 /* AppDelegate.swift */,
 				44ED03B421513DFD00ED5A11 /* FirstViewController.swift */,
 				44EB51AC215170A100B113F6 /* FirstViewController+UICollectionView.swift */,
-				44ED03B621513DFD00ED5A11 /* SecondViewController.swift */,
 				44ED03B821513DFD00ED5A11 /* Main.storyboard */,
+				442434AB215DB5AE0011E98C /* WeatherDetail */,
 				44EB51B3215172BC00B113F6 /* CardViewCell.swift */,
 				44EB51B7215176F000B113F6 /* CardViewCell.xib */,
 				44ED03BB21513DFE00ED5A11 /* Assets.xcassets */,
@@ -212,11 +223,12 @@
 			files = (
 				44EB51AD215170A100B113F6 /* FirstViewController+UICollectionView.swift in Sources */,
 				44ED03F72151561400ED5A11 /* Weather.xcdatamodeld in Sources */,
+				44A36E2A215D76E0005239FE /* WeatherDetailViewController.swift in Sources */,
 				44EB51B4215172BC00B113F6 /* CardViewCell.swift in Sources */,
-				44ED03B721513DFD00ED5A11 /* SecondViewController.swift in Sources */,
 				44EB51B1215171E200B113F6 /* UICollectionView+Reusable.swift in Sources */,
 				44ED03B321513DFD00ED5A11 /* AppDelegate.swift in Sources */,
 				44ED03B521513DFD00ED5A11 /* FirstViewController.swift in Sources */,
+				44A36E28215D41C1005239FE /* DetailLabelView.swift in Sources */,
 				44EB51B2215171E200B113F6 /* Reusable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
